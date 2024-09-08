@@ -15,11 +15,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: NewsScreen(),
-      // routes: {
-      //   SplashScreen.routename:(_)=>SplashScreen(),
-      //   HomeScreen.routename:(_)=>HomeScreen(),
-      // },
+      home: SplashScreen(),
+      routes: {
+        SplashScreen.routename:(_)=>SplashScreen(),
+        HomeScreen.routename:(_)=>HomeScreen(),
+      },
     );
   }
 }

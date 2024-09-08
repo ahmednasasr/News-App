@@ -3,66 +3,86 @@ import 'package:newsapp/core/services/apis/api_manger.dart';
 import 'package:newsapp/models/news_model.dart';
 import 'package:newsapp/models/source_model.dart';
 
-class NewsScreen extends StatelessWidget {
-  const NewsScreen({super.key});
+class NewsScreen extends StatefulWidget {
+  final String id;
+   NewsScreen({super.key, required this.id});
+
+  @override
+  State<NewsScreen> createState() => _NewsScreenState();
+}
+
+class _NewsScreenState extends State<NewsScreen> {
+  int selectedtab=0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: Text("News"),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          FutureBuilder(
-            future: ApiManger.getsource(),
+      body: FutureBuilder(
+            future: ApiManger.getsource(widget.id),
             builder: (context, snapshot) {
-                List<Sources>? sources =snapshot.data?.sources??[];
-                return DefaultTabController(
-                    length: sources.length ,
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("waitting");
+                return Center(child: CircularProgressIndicator(),);
+              } else if (snapshot.hasError) {
+                print(snapshot.error);
+                return Center(child: Text("Error: ${snapshot.error}"),);
+              } else {
+                print(snapshot.data?.sources??"");
+                List<Sources>? sources = snapshot.data?.sources ?? [];
+                return Column(
+                  children: [
+                    DefaultTabController(
+                    length: sources.length,
                     child: TabBar(
-                      labelPadding: EdgeInsets.all(3),
-                        indicatorColor: Colors.red,
+                        onTap: (value){
+                          selectedtab=value;
+                          setState(() {
+                          });
+                        },
+                        labelPadding: EdgeInsets.all(3),
+                        indicatorColor: Colors.transparent,
                         isScrollable: true
-                        ,tabs: sources.map((e){
+                        , tabs: sources.map((e) {
                       return Tab(
                         child: Container(
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                              color: selectedtab == sources.indexOf(e)? Colors.green : Colors.transparent,
                               borderRadius: BorderRadius.circular(15),
-                              border: Border.all(color: Colors.red)
+                              border: Border.all(color: Colors.green)
                           ),
-                          child: Text(e.name??"error",style: TextStyle(color: Colors.green),),
+                          child: Text(e.name ?? "error",
+                            style: TextStyle(color: selectedtab == sources.indexOf(e)? Colors.white : Colors.green),),
                         ),
                       );
-                    }).toList()));
-              }
-          ),
-          FutureBuilder(future: ApiManger.getNews(),
-            builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return Center(child: CircularProgressIndicator(),);
-              }else if(snapshot.hasError){
-                return Center(child: Text("Error: ${snapshot.error}"),);
-              }else{
-                List<Article> article = snapshot.data?.articles??[];
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: article.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.network(article[index].urlToImage),
-                      );
-                    },),
+                    }).toList())),
+                    if (sources.isNotEmpty) FutureBuilder(
+                      future: ApiManger.getNews(sources[selectedtab].id??""),
+                      builder: (context, snapshot) {
+                        if(snapshot.connectionState == ConnectionState.waiting){
+                          return Center(child: CircularProgressIndicator(),);
+                        }else if(snapshot.hasError){
+                          return Center(child: Text("Error: ${snapshot.error}"),);
+                        }else{
+                          List<Article> article = snapshot.data?.articles??[];
+                          return Expanded(
+                            child: ListView.builder(
+                              itemCount: article.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.network(article[index].urlToImage),
+                                );
+                              },),
+                          );
+                        }
+                      },),
+                  ],
                 );
               }
-            },),
-        ],
-      )
+            }
+          ),
+
     );
   }
 }

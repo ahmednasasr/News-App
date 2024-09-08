@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:newsapp/screens/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  static const String routename="/";
+  static const String routename="splash";
   const SplashScreen({super.key});
 
   @override

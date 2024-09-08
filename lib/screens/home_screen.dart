@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:newsapp/models/category_data.dart';
+import 'package:newsapp/screens/category_screen.dart';
+import 'package:newsapp/screens/news_screen.dart';
 
 import '../custome_widgets/category_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const String routename='homescreen';
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +21,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
        shape: OutlineInputBorder(
          borderRadius: BorderRadius.only(bottomRight: Radius.circular(40),bottomLeft:Radius.circular(40) )
-       ), 
+       ),
         title: Text("News App"),
         centerTitle: true,
         backgroundColor: Colors.green,
@@ -34,7 +41,15 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Icon(Icons.menu,size: 35,),
                 SizedBox(width: 5,),
-                Text("Categories",style: TextStyle(color: Colors.black,fontSize: 30,fontWeight: FontWeight.bold),),
+                InkWell(
+                    onTap: (){
+                      categoryData = null;
+                      setState(() {
+
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text("Categories",style: TextStyle(color: Colors.black,fontSize: 30,fontWeight: FontWeight.bold),)),
               ],
             ),
             SizedBox(height: 10),
@@ -48,27 +63,17 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          children: [
-            Text("Pick your category \n of interest",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.black),),
-          SizedBox(height: 10,),
-            Expanded(
-            child: GridView.builder(
-              itemCount: CategoryData.category.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: 10 ,
-                  crossAxisSpacing: 10,
-                  crossAxisCount: 2), itemBuilder: (context, index) {
-              return CategoryWidget(category: CategoryData.category[index]);
-            },
-            ),
-          )
-          ],
-        ),
-      ),
+      body: categoryData == null ?CategoryScreen(ontab: onCategoryClicked,):NewsScreen(id:categoryData!.id)
     );
+  }
+
+  CategoryData? categoryData;
+
+  onCategoryClicked(cat){
+    categoryData =cat;
+    setState(() {
+
+    });
   }
 }
 
