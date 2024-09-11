@@ -5,6 +5,7 @@ import 'package:newsapp/models/news_model.dart';
 import 'package:newsapp/models/source_model.dart';
 
 import '../custome_widgets/search_delgate.dart';
+import 'news_detail.dart';
 
 class NewsScreen extends StatefulWidget {
   final String id;
@@ -72,29 +73,41 @@ class _NewsScreenState extends State<NewsScreen> {
                               child: ListView.builder(
                                 itemCount: article.length,
                                 itemBuilder: (context, index) {
-                                  return Card(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          ClipRRect(
-                                              borderRadius: BorderRadius.circular(10),
-                                            child:CachedNetworkImage(
-                                            imageUrl: article[index].urlToImage??"",
-                                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                                            errorWidget: (context, url, error) => Center(child: Icon(Icons.error)),
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => NewsDetail(
+                                            article: article[index],
                                           ),
-                                    ),
-                                      Text(article[index].source.name??""),
-                                      Text(article[index].title??""),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              Text(article[index].publishedAt.substring(0,10)??"")
-                                            ],
-                                          )
-                                        ],
+                                        ),
+                                      );
+                                    },
+                                    child: Card(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(10),
+                                              child: CachedNetworkImage(
+                                                imageUrl: article[index].urlToImage ?? "",
+                                                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                                errorWidget: (context, url, error) => Center(child: Icon(Icons.error)),
+                                              ),
+                                            ),
+                                            Text(article[index].source.name ?? ""),
+                                            Text(article[index].title ?? ""),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: [
+                                                Text(article[index].publishedAt.substring(0, 10) ?? ""),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
