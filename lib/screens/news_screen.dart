@@ -4,6 +4,8 @@ import 'package:newsapp/core/services/apis/api_manger.dart';
 import 'package:newsapp/models/news_model.dart';
 import 'package:newsapp/models/source_model.dart';
 
+import '../custome_widgets/search_delgate.dart';
+
 class NewsScreen extends StatefulWidget {
   final String id;
    NewsScreen({super.key, required this.id});
@@ -110,3 +112,5 @@ class _NewsScreenState extends State<NewsScreen> {
     );
   }
 }
+
+

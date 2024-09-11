@@ -4,6 +4,7 @@ import 'package:newsapp/screens/category_screen.dart';
 import 'package:newsapp/screens/news_screen.dart';
 
 import '../custome_widgets/category_widget.dart';
+import '../custome_widgets/search_delgate.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routename='homescreen';
@@ -26,7 +27,18 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         backgroundColor: Colors.green,
         elevation: 0,
-      ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: NewsSearchDelegate(),
+                );
+              },
+            ),
+          ],
+        ),
       drawer: Drawer(
         child: Column(
           children: [
