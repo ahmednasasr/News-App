@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:newsapp/core/search/serach_screen.dart';
 import 'package:newsapp/models/category_data.dart';
 import 'package:newsapp/screens/category_screen.dart';
 import 'package:newsapp/screens/news_screen.dart';
 
 import '../custome_widgets/category_widget.dart';
-import '../custome_widgets/search_delgate.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routename='homescreen';
@@ -28,15 +28,11 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.green,
         elevation: 0,
           actions: [
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: NewsSearchDelegate(),
-                );
+            InkWell(
+              onTap: (){
+                Navigator.pushNamed(context, SerachScreen.routename);
               },
-            ),
+                child: Icon(categoryData!=null ? Icons.search: null))
           ],
         ),
       drawer: Drawer(
@@ -81,8 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   CategoryData? categoryData;
 
-  onCategoryClicked(cat){
-    categoryData =cat;
+  onCategoryClicked(value){
+    categoryData =value;
     setState(() {
 
     });

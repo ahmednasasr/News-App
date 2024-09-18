@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newsapp/core/search/serach_screen.dart';
 import 'package:newsapp/screens/home_screen.dart';
 import 'package:newsapp/screens/news_screen.dart';
 import 'package:newsapp/splash/splash_screen.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashScreen.routename:(_)=>SplashScreen(),
         HomeScreen.routename:(_)=>HomeScreen(),
+        SerachScreen.routename:(_)=>SerachScreen(),
       },
     );
   }

@@ -25,4 +25,12 @@ class ApiManger{
     return SourceModel.fromJson(json);
 
   }
+  static Future<NewsModel> search(String source,String query)async {
+    Uri url = Uri.parse("https://newsapi.org/v2/top-headlines?sources=$source&apiKey=3f428a79de044788a05be27a9e61a982&q=$query");
+    http.Response response = await http.get(url);
+    var json = jsonDecode(response.body);
+
+    return NewsModel.formJson(json);
+
+  }
 }
