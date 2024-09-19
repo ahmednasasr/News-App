@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:newsapp/core/services/apis/api_manger.dart';
 import 'package:newsapp/models/news_model.dart';
 import 'package:newsapp/models/source_model.dart';
+import 'package:provider/provider.dart';
 
+import '../manger/main_provider.dart';
 import 'news_detail.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -15,10 +17,10 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
-  int selectedtab=0;
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<mainProvider>(context);
     return Scaffold(
       body: FutureBuilder(
             future: ApiManger.getsource(widget.id),
@@ -31,42 +33,43 @@ class _NewsScreenState extends State<NewsScreen> {
                 return Center(child: Text("Error: ${snapshot.error}"),);
               } else {
                 print(snapshot.data?.sources??"");
-                List<Sources>? sources = snapshot.data?.sources ?? [];
+               provider.sources= snapshot.data?.sources ?? [];
                 return Column(
                   children: [
                     DefaultTabController(
-                    length: sources.length,
+                    length: provider.sources!.length,
                     child: TabBar(
                         onTap: (value){
-                          selectedtab=value;
+                          provider.selectedtab=value;
                           setState(() {
                           });
                         },
                         labelPadding: EdgeInsets.all(3),
                         indicatorColor: Colors.transparent,
                         isScrollable: true
-                        , tabs: sources.map((e) {
+                        , tabs:  provider.sources!.map((e) {
                       return Tab(
                         child: Container(
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                              color: selectedtab == sources.indexOf(e)? Colors.green : Colors.transparent,
+                              color: provider.selectedtab ==  provider.sources!.indexOf(e)? Colors.green : Colors.transparent,
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(color: Colors.green)
                           ),
                           child: Text(e.name ?? "error",
-                            style: TextStyle(color: selectedtab == sources.indexOf(e)? Colors.white : Colors.green),),
+                            style: TextStyle(color: provider.selectedtab ==  provider.sources!.indexOf(e)? Colors.white : Colors.green),),
                         ),
                       );
                     }).toList())),
-                    if (sources.isNotEmpty) FutureBuilder(
-                      future: ApiManger.getNews(sources[selectedtab].id??""),
+                    if ( provider.sources!.isNotEmpty) FutureBuilder(
+                      future: ApiManger.getNews( provider.sources![provider.selectedtab].id??""),
                       builder: (context, snapshot) {
                         if(snapshot.connectionState == ConnectionState.waiting){
                           return Center(child: CircularProgressIndicator(),);
                         }else if(snapshot.hasError){
                           return Center(child: Text("Error: ${snapshot.error}"),);
-                        }else{
+                        }
+                        else{
                           List<Article> article = snapshot.data?.articles??[];
                           return Expanded(
                               child: ListView.builder(
@@ -111,7 +114,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                     ),
                                   );
                                 },),
-                            
+
                           );
                         }
                       },),

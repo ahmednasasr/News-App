@@ -18,12 +18,12 @@ class SourceModel {
 
 class Sources {
   Sources({
-      this.id, 
-      this.name, 
-      this.description, 
-      this.url, 
-      this.category, 
-      this.language, 
+  this.id,
+  this.name,
+  this.description,
+  this.url,
+  this.category,
+  this.language,
       this.country,});
 
   Sources.fromJson(dynamic json) {

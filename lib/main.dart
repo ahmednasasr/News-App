@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:newsapp/core/search/serach_screen.dart';
+import 'package:newsapp/manger/main_provider.dart';
 import 'package:newsapp/screens/home_screen.dart';
 import 'package:newsapp/screens/news_screen.dart';
 import 'package:newsapp/splash/splash_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => mainProvider(),
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
